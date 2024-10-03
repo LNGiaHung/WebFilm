@@ -1,0 +1,12 @@
+{
+  "navbar": {
+    "home": "Trang chủ",
+    "about": "Giới thiệu",
+    "contact": "Liên hệ",
+    "login": "Đăng nhập",
+    "signup": "Đăng ký"
+  },
+  "button": {
+    "changeLanguage": "Thay đổi ngôn ngữ"
+  }
+}
