@@ -1,61 +1,137 @@
-// Home.tsx
-import React, { useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "./Navbar";
 import Footer from "./Footer";
-import { FaSearch, FaBell, FaUser } from "react-icons/fa";
 
 // Define types for content
-interface Content {
-  title: string;
-  image: string;
-  description: string;
+interface Movie {
+  _id: string;
+  Title: string;
+  Year: string;
+  Rated: string;
+  Released: string;
+  Runtime: string;
+  Genre: string;
+  Director: string;
+  Writer: string;
+  Actors: string;
+  Plot: string;
+  Language: string;
+  Country: string;
+  Awards: string;
+  Poster: string;
+  Metascore: string;
+  imdbRating: string;
+  imdbVotes: string;
+  imdbID: string;
+  Type: string;
+  Response: string;
+  Images: string[]; // Array of additional images
 }
 
 const Home: React.FC = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [selectedContent, setSelectedContent] = useState<Content | null>(null);
+  const [selectedContent, setSelectedContent] = useState<Movie | null>(null);
+  const [movies, setMovies] = useState<Movie[]>([]);
 
-  const genres: string[] = ["Action", "Comedy", "Drama", "Sci-Fi", "Horror"];
-  const contentRows = [
-    { title: "Popular on Netflix", items: Array(6).fill(null) },
-    { title: "Trending Now", items: Array(6).fill(null) },
-    { title: "Watch It Again", items: Array(6).fill(null) },
-  ];
+  // Fetch movies from the API
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        const response = await fetch("http://localhost:2000/api/movies/get");
+        const data = await response.json();
+        setMovies(data.movies);
+      } catch (error) {
+        console.error("Error fetching movies:", error);
+      }
+    };
 
-  const handleContentClick = (content: Content) => {
-    setSelectedContent(content);
+    fetchMovies();
+  }, []);
+
+  const handleContentClick = (movie: Movie) => {
+    setSelectedContent(movie);
     setShowModal(true);
   };
 
-  // Define props for ContentModal
-  interface ContentModalProps {
-    content: Content;
-    onClose: () => void;
-  }
+  // ContentModal component with drag-to-scroll functionality
+  const ContentModal: React.FC<{ content: Movie; onClose: () => void }> = ({ content, onClose }) => {
+    const scrollRef = useRef<HTMLDivElement>(null);
+    const navigate = useNavigate(); // Hook to navigate
 
-  const ContentModal: React.FC<ContentModalProps> = ({ content, onClose }) => (
-    <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-      <div className="bg-gray-900 p-8 rounded-lg max-w-3xl w-full">
-        <h2 className="text-2xl font-bold mb-4">{content.title}</h2>
-        <div className="aspect-w-16 aspect-h-9 mb-4">
-          <img
-            src={content.image}
-            alt={content.title}
-            className="object-cover w-full h-full rounded"
-          />
-        </div>
-        <p className="mb-4">{content.description}</p>
-        <div className="flex justify-end">
-          <button
-            onClick={onClose}
-            className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+    const handleMouseDown = (e: React.MouseEvent) => {
+      if (scrollRef.current) {
+        const startX = e.clientX;
+        const scrollLeft = scrollRef.current.scrollLeft;
+
+        const handleMouseMove = (e: MouseEvent) => {
+          const x = e.clientX - startX;
+          scrollRef.current!.scrollLeft = scrollLeft - x;
+        };
+
+        const handleMouseUp = () => {
+          document.removeEventListener("mousemove", handleMouseMove);
+          document.removeEventListener("mouseup", handleMouseUp);
+        };
+
+        document.addEventListener("mousemove", handleMouseMove);
+        document.addEventListener("mouseup", handleMouseUp);
+      }
+    };
+
+    const handleDetailsClick = () => {
+      onClose(); // Close the modal
+      navigate(`/details/${content.imdbID}`, { state: { movie: content } }); // Redirect with movie data
+    };
+
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+        <div className="bg-gray-900 p-8 rounded-lg max-w-3xl w-full">
+          <h2 className="text-2xl font-bold mb-4">{content.Title} ({content.Year})</h2>
+          <p className="mb-4">{content.Plot}</p>
+          <p><strong>Director:</strong> {content.Director}</p>
+          <p><strong>Actors:</strong> {content.Actors}</p>
+          <p><strong>Genre:</strong> {content.Genre}</p>
+          <p><strong>Rated:</strong> {content.Rated}</p>
+          <p><strong>Runtime:</strong> {content.Runtime}</p>
+          <p><strong>Released:</strong> {content.Released}</p>
+
+          {/* Image Gallery with Drag-to-Scroll */}
+          <div
+            ref={scrollRef}
+            className="flex overflow-x-auto space-x-4 mt-4 cursor-grab scrollbar-hide"
+            onMouseDown={handleMouseDown}
           >
-            Close
-          </button>
+            {content.Images.map((image, index) => (
+              <img
+                key={index}
+                src={image}
+                alt={`Preview ${index + 1}`}
+                className="h-32 w-auto rounded-lg object-cover"
+                draggable={false} // Prevent dragging
+              />
+            ))}
+          </div>
+
+          <div className="flex justify-between mt-4 gap-4">
+            <button
+              onClick={handleDetailsClick}
+              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+            >
+              Details
+            </button>
+            <button
+              onClick={onClose}
+              className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+            >
+              Close
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className="bg-black text-white min-h-screen">
@@ -78,46 +154,27 @@ const Home: React.FC = () => {
         </section>
 
         <section className="container mx-auto px-4 py-8 flex flex-col items-start">
-          <h2 className="text-2xl font-bold mb-4">Browse by Genre</h2>
-          <div className="flex space-x-4 overflow-x-auto pb-4">
-            {genres.map((genre, index) => (
-              <button
-                key={index}
-                className="bg-gray-800 text-white px-4 py-2 rounded whitespace-nowrap hover:bg-gray-700"
+          <h2 className="text-2xl font-bold mb-4">Browse Movies</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            {movies.map((movie) => (
+              <div
+                key={movie._id}
+                className="relative aspect-w-2 aspect-h-3 bg-gray-800 rounded-lg overflow-hidden cursor-pointer transform transition-transform hover:scale-105 shadow-lg"
+                onClick={() => handleContentClick(movie)}
               >
-                {genre}
-              </button>
+                <img
+                  src={movie.Images[1]}
+                  alt={movie.Title}
+                  className="object-cover w-full h-full rounded-lg transition-transform duration-300"
+                  draggable={false} // Prevent dragging
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent flex items-end p-4">
+                  <p className="text-white text-lg font-bold">{movie.Title}</p>
+                </div>
+              </div>
             ))}
           </div>
         </section>
-
-        {contentRows.map((row, rowIndex) => (
-          <section key={rowIndex} className="container mx-auto px-4 py-8 flex flex-col items-start">
-            <h2 className="text-2xl font-bold mb-4">{row.title}</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-              {row.items.map((_, index) => (
-                <div
-                  key={index}
-                  className="aspect-w-2 aspect-h-3 bg-gray-800 rounded overflow-hidden cursor-pointer transform transition-transform hover:scale-105"
-                  onClick={() =>
-                    handleContentClick({
-                      title: `Content ${rowIndex + 1}-${index + 1}`,
-                      image: `https://images.unsplash.com/photo-1594909122845-11baa439b7bf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80`,
-                      description:
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                    })
-                  }
-                >
-                  <img
-                    src={`https://images.unsplash.com/photo-1594909122845-11baa439b7bf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80`}
-                    alt={`Content ${rowIndex + 1}-${index + 1}`}
-                    className="object-cover w-full h-full"
-                  />
-                </div>
-              ))}
-            </div>
-          </section>
-        ))}
       </main>
 
       <Footer />
