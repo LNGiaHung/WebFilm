@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { FaUser, FaEnvelope, FaLock, FaPhone } from "react-icons/fa";
 import Header from "../Navbar";
@@ -7,7 +8,7 @@ import Footer from "../Footer";
 
 // Define the types for form inputs
 type SignUpFormInputs = {
-  name: string;
+  username: string;
   email: string;
   phone: string;
   password: string;
@@ -15,10 +16,33 @@ type SignUpFormInputs = {
 
 const SignUp: React.FC = () => {
   const { register, handleSubmit, formState: { errors } } = useForm<SignUpFormInputs>();
+  const navigate = useNavigate(); // Hook to navigate
 
-  const onSubmit: SubmitHandler<SignUpFormInputs> = (data) => {
+  const onSubmit: SubmitHandler<SignUpFormInputs> = async (data) => {
     console.log("Sign Up Data:", data);
-    // Handle sign up logic here, e.g., API call to register the user
+
+    try {
+      const response = await fetch('http://localhost:2000/api/movies/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data), // Send form data as JSON
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log("User registered successfully:", result);
+        navigate(`/login`);
+      } else {
+        const errorResult = await response.json();
+        console.error("Error during registration:", errorResult);
+        // Handle error, e.g., show error message
+      }
+    } catch (error) {
+      console.error("Network or server error:", error);
+      // Handle network errors
+    }
   };
 
   return (
@@ -33,11 +57,11 @@ const SignUp: React.FC = () => {
                 <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                 <input
                   type="text"
-                  {...register("name", { required: "Name is required" })}
+                  {...register("username", { required: "Name is required" })}
                   placeholder="Name"
                   className="bg-gray-800 text-white px-10 py-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600"
                 />
-                {errors.name && <p className="text-red-500 mt-2">{errors.name.message}</p>}
+                {errors.username && <p className="text-red-500 mt-2">{errors.username.message}</p>}
               </div>
               <div className="relative">
                 <FaEnvelope className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />

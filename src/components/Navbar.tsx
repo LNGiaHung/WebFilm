@@ -61,7 +61,8 @@ const Header: React.FC = () => {
             onChange={handleInputChange}
             className="bg-gray-800 text-white px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-red-600 w-full" // Make the input full width
           />
-          <FaSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+          {/* Update the FaSearch icon to have a white color */}
+          <FaSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white" />
           {showDropdown && suggestions.length > 0 && (
             <div className="absolute z-10 bg-gray-800 rounded-md mt-1 w-full"> {/* Ensure dropdown is full width */}
               {suggestions.map((movie) => (
@@ -85,8 +86,9 @@ const Header: React.FC = () => {
           )}
         </div>
         <div className="flex items-center space-x-4">
-          <Link to="/Login"><FaUser className="text-2xl" /></Link>
-          <FaBell className="text-2xl" />
+          {/* Update the FaUser and FaBell icons to have a white color */}
+          <Link to="/Login"><FaUser className="text-2xl text-white" /></Link>
+          <FaBell className="text-2xl text-white" />
         </div>
       </div>
     </header>

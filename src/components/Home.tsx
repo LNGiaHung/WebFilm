@@ -135,8 +135,6 @@ const Home: React.FC = () => {
 
   return (
     <div className="bg-black text-white min-h-screen">
-      <Header />
-
       <main className="pt-20">
         <section className="relative">
           <img
@@ -176,9 +174,6 @@ const Home: React.FC = () => {
           </div>
         </section>
       </main>
-
-      <Footer />
-
       {showModal && selectedContent && (
         <ContentModal
           content={selectedContent}

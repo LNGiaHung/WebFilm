@@ -1,6 +1,6 @@
 import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaUser, FaLock } from "react-icons/fa";
 import Header from "../Navbar";
 import Footer from "../Footer";
@@ -13,10 +13,36 @@ type LoginFormInputs = {
 
 const Login: React.FC = () => {
   const { register, handleSubmit, formState: { errors } } = useForm<LoginFormInputs>();
+  const navigate = useNavigate(); // Use navigate to redirect the user
 
-  const onSubmit: SubmitHandler<LoginFormInputs> = (data) => {
-    console.log("Login Data:", data);
-    // Handle login logic here, e.g., API call to authenticate the user
+  const onSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
+    try {
+      const response = await fetch('http://localhost:2000/api/movies/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log("Login successful:", result);
+
+        // Save the token to localStorage or cookie for session management
+        localStorage.setItem('token', result.token);
+
+        // Redirect to the home page after successful login
+        navigate('/');
+      } else {
+        const errorResult = await response.json();
+        console.error("Login failed:", errorResult);
+        // Handle login error (e.g., show an error message)
+      }
+    } catch (error) {
+      console.error("Error during login:", error);
+      // Handle network or server errors
+    }
   };
 
   return (
