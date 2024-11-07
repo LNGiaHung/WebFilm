@@ -1,0 +1,515 @@
+* {
+  color: #035c27;
+  font-family: Montserrat;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.screen {
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(
+    180deg,
+    rgba(177, 226, 178, 0.6) 16.5%,
+    rgba(194, 239, 246, 0.6) 91%
+  );
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+}
+
+
+.student-container {
+  display: flex;
+  z-index: 1000;
+  margin: 125px 114px;
+  width: 1500px;
+  height: 867px;
+  flex-shrink: 0;
+  border-radius: 50px;
+  background: #a2dab2;
+  box-shadow: 4px 4px 100px 20px rgba(0, 0, 0, 0.06);
+}
+.left-student-container {
+  width: 50%;
+  /* height: 867px; */
+  margin: 48px 60px;
+  /* display: flex; */
+}
+
+.after-submit-container,
+.leader-container {
+    display: flex;
+    z-index: 1000;
+    margin: 125px 114px;
+    width: 1500px;
+    height: 867px;
+    flex-shrink: 0;
+    border-radius: 50px;
+    background: #A2DAB2;
+    box-shadow: 4px 4px 100px 20px rgba(0, 0, 0, 0.06);
+}
+
+.edit-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.leader-left-container{
+    width: 792px;
+    height: 867px;
+    margin: 32px 60px 23px 60px;
+    display: flex;
+}
+#input-project {
+    margin-top: 20px;
+    margin-bottom: 5px;
+    width: 537px;
+    height: 62px;
+}
+
+.project-name{
+    margin-bottom: 20px;
+}
+.require-skill {
+    padding: 14px 0px 5px 0px;
+    border-radius: 10px;
+    width: 400px;
+}
+
+.require-skill h3 {
+  margin-top: 54px;
+  font-weight: bold;
+  color: #2d653d; /* Màu xanh đậm cho tiêu đề */
+  margin-bottom: 15px;
+}
+
+/* Grid layout cho danh sách kỹ năng */
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+}
+
+.skill {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.skill h4 {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
+  color: black;
+}
+
+.checkmark {
+    width: 24px; /* Set a fixed width */
+    height: 24px; /* Set a fixed height */
+    display: inline-block; /* Ensure the image is treated as a block element */
+    vertical-align: middle; /* Align the icon vertically with text */
+    object-fit: contain; /* Ensure the SVG fits within the specified dimensions */
+}
+
+.leader-fill-in{
+    width: 76%;
+}
+
+.leader-right-container{
+    width: 708px;
+    height: 867px;
+    right: 0;
+}
+
+#img1 {
+  border-radius: 0px 50px 50px 0px;
+  width: 698px;
+  height: 867px;
+}
+
+.date-picker {
+    font-size: 17px;
+    width: 163px;
+    height: 42px;
+}
+.time {
+    display: flex;
+    margin-top: 26px;
+}
+
+.community-size {
+    margin-top: 60px;
+}
+
+.size-picker {
+    margin-top: 20px;
+    font-size: 20px;
+    padding-left: 17px;
+}
+#location-icon{
+    padding-left:7px;
+}
+
+.location-picker{
+    font-size: 17px;
+    height: 40px;
+    width: 182px;
+    z-index: 1;
+    padding: 0px 0px 0px 20px;
+}
+
+.time-line {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  margin-bottom: 30px;
+  padding-right: 58px;
+}
+
+.step {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: white;
+    border: 2px solid #d3d3d3;
+    color: #d3d3d3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-bottom: 135px; 
+    position: relative;
+    transition: all 0.3s ease-in-out;
+    transition: background-color 0.7s ease;
+}
+
+.step.circle.step2 {
+    margin-top: 17px;
+}
+
+.step3 {
+    margin-top: 29px;
+    margin-bottom: 66px;
+}
+
+.line {
+  width: 2px;
+  background-color: #b0c5b3;
+  position: absolute;
+  top: 40px; 
+  z-index: -1;
+  transition: background-color 0.7s ease;
+}
+
+/* Tùy chỉnh chiều dài các đoạn nối */
+.line1 {
+    height: 164px;
+    right: 81px;
+    top: 45px;
+}
+
+.line2 {
+    top: 250px;
+    height: 168px;
+    right: 81px;
+}
+
+.line3 {
+    height: 120px;
+    top: 465px;
+    right: 81px;
+}
+.line.active {
+    background-color: #4caf50; /* Active color */
+}
+.step.active {
+    background-color: #007730;
+    color: white;
+    border-color: #4CAF50;
+    transform: scale(1.2);
+}
+
+.step::before {
+    content: '';
+    width: 2px;
+    height: 132px;
+    background-color: #d3d3d3;
+    position: absolute;
+    top: -132px;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: background-color 0.3s ease-in-out, height 0.3s ease-in-out;
+}
+
+.step.active::before {
+    background-color: #007730;
+    height: 55px; /* Make the green line longer when the step is active */
+}
+
+
+.step:first-child::before {
+  display: none;
+}
+
+.fill-in {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.firstname {
+  grid-area: 1 / 1 / 2 / 2;
+}
+.community-name h3,
+.email h3,
+.mobile h3,
+.firstname h3,
+.lastname h3 {
+  margin-bottom: 6px;
+}
+
+.community-name {
+  margin-top: 14px;
+}
+.lastname {
+  grid-area: 1 / 2 / 2 / 3;
+}
+.gender {
+  grid-area: 2 / 1 / 3 / 2;
+  display: flex;
+  flex-direction: column;
+}
+.gender-ratio > label {
+  margin-top: 20px;
+}
+
+.gender-ratio {
+  top: 20px;
+  display: flex;
+  flex: 1;
+  gap: 43px;
+}
+.gender-ratio > label {
+  color: black;
+}
+.gender-ratio label input {
+  margin-left: 5px;
+}
+.studentID {
+  grid-area: 2 / 2 / 3 / 3;
+  display: flex;
+  flex-direction: column;
+  gap: 21px;
+}
+.studentID > h4 {
+  color: black;
+}
+.email {
+  grid-area: 3 / 1 / 4 / 2;
+}
+.mobile {
+  grid-area: 3 / 2 / 4 / 3;
+}
+
+.skills-box {
+  height: 250px; /* Chiều cao cố định */
+  width: 100%;
+  overflow-y: auto; /* Kích hoạt cuộn dọc nếu nội dung vượt quá */
+  overflow-x: hidden;
+  padding: 18px;
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+
+.skill-items {
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+}
+
+.skill-items-list > label {
+  color: #000;
+}
+
+.skill-items-list > label > input {
+  margin-right: 10px;
+}
+
+.skills-box h3 {
+  padding-bottom: 16px;
+}
+
+.skills label {
+  display: block;
+  margin-bottom: 16px;
+}
+
+.skills-box::-webkit-scrollbar {
+  width: 5px;
+}
+
+.skills-box::-webkit-scrollbar-thumb {
+  background-color: #28a745; /* Màu thanh cuộn */
+  border-radius: 10px;
+}
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+select {
+  width: 100%;
+  padding: 10px;
+  /* margin-bottom: 20px; */
+  border-radius: 5px;
+  margin-right: 20px;
+  border: 1px solid #ccc;
+}
+
+
+.step.active + .step.active::before {
+    background-color: #4CAF50; /* Green line connecting the active steps */
+    height: 55px; /* Make sure it covers the distance between active steps */
+}
+.resubmit-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.create-button-container,
+.edit-button-container{
+    margin-right: 20px;
+}
+.create-button-container,
+.edit-button-container,
+.button-container {
+    display: flex;
+    justify-content: center; /* Centers horizontally */
+    align-items: center;    /* Centers vertically, if needed */
+    height: 100px;          /* Set height as needed */
+
+}
+
+.resubmit-button,
+.delete-button,
+.create-button {
+    width: 187px;
+    height: 52px;
+    flex-shrink: 0;
+    border-radius: 20px;
+    border: 3px solid #046F2E;
+    background: var(--Backgrounds-Primary, #FFF);
+    margin-top: 80px;
+    margin-right: 26px;
+}
+
+/* After Submit */
+
+/* ProjectList CSS */
+
+/* ProjectList CSS */
+/* ProjectList CSS */
+
+.after-submit-left-item {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.after-submit-left-item-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+
+.after-submit-left-container {
+    justify-content: flex-start;
+    height: 100%;
+    width: 61.3%;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.after-submit-left-container h2 {
+    text-align: center; 
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  padding-bottom: 20px;
+}
+
+.project-box {
+    display: flex;
+    flex-direction: column;
+    /* height: 12%; */
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    /* border: 2px dotted #9c9c9c; */
+    /* height: 100px; */
+}
+
+.project-box .project-name {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.project-box .status {
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+.status.approved {
+  color: green;
+}
+
+.status.rejected {
+  color: red;
+}
+.right-container {
+  width: 35%;
+}
+
+.right-container img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+.close-button {
+  position: absolute; /* Định vị tuyệt đối */
+  top: 10px; /* Khoảng cách từ trên */
+  right: 10px; /* Khoảng cách từ bên phải */
+  background-color: transparent;
+  border: none;
+  font-size: 24px; /* Có thể điều chỉnh kích thước */
+  cursor: pointer;
+  color: #333;
+}
+
+.close-button:hover {
+  color: red; /* Thay đổi màu khi hover */
+}
+
+
+
+
+
