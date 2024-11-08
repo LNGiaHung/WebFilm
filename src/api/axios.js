@@ -1,17 +1,18 @@
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
-const BASE_URL = "http://localhost:8080/scrum-project";
+const BASE_URL = "http://localhost:5000/api/v1";
 
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true,  // Add this line
+  withCredentials: true,
 });
 
 axiosInstance.interceptors.request.use(request => {
-  const accessToken = localStorage.getItem('accessToken');
+  const accessToken = Cookies.get('accessToken');
   if (accessToken) {
     request.headers['Authorization'] = `Bearer ${accessToken}`;
   }
@@ -21,34 +22,30 @@ axiosInstance.interceptors.request.use(request => {
 });
 
 axiosInstance.interceptors.response.use(
-  response => response, // Directly return successful responses.
+  response => response,
   async error => {
     const originalRequest = error.config;
     if (error.response.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true; // Mark the request as retried to avoid infinite loops.
+      originalRequest._retry = true;
       try {
-        const refreshToken = localStorage.getItem('refreshToken'); // Retrieve the stored refresh token.
-        // Make a request to your auth server to refresh the token.
-        const response = await axios.post(`/refresh`, {
+        const refreshToken = Cookies.get('refreshToken');
+        console.log(refreshToken)
+        const response = await axios.post(`http://localhost:5000/api/v1/auth/refresh`, {
           refreshToken,
         });
-        const { accessToken, refreshToken: newRefreshToken } = response.data;
-        // Store the new access and refresh tokens.
-        localStorage.setItem('accessToken', accessToken);
-        localStorage.setItem('refreshToken', newRefreshToken);
-        // Update the authorization header with the new access token.
+        const { accessToken } = response.data;
+        Cookies.set('accessToken', accessToken);
+        console.log("token refreshed")
         axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-        return axiosInstance(originalRequest); // Retry the original request with the new access token.
+        return axiosInstance(originalRequest);
       } catch (refreshError) {
-        // Handle refresh token errors by clearing stored tokens and redirecting to the login page.
         console.error('Token refresh failed:', refreshError);
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-        window.location.href = '/login';
+        Cookies.remove('accessToken');
+        Cookies.remove('refreshToken');
         return Promise.reject(refreshError);
       }
     }
-    return Promise.reject(error); // For all other errors, return the error as is.
+    return Promise.reject(error);
   }
 );
 
